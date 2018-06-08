@@ -11,39 +11,141 @@
 </head>
 <body>
     <header class="container">
-        <nav class="navbar">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="mailto:">Foorozideh</a>
-                </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <nav class="navbar">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="mailto:">Foorozideh</a>
+                        </div>
 
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
-                        <li><a href="#">Guid</a></li>
-                    </ul>
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav">
+                                <li class="active"><a href="#"><i id="test-icon" class="fa fa-home"></i>&nbsp; Home <span class="sr-only">(current)</span></a></li>
+                                <li><a href="#">Guid</a></li>
+                            </ul>
 
-                </div>
+                        </div>
+                    </div>
+                </nav>
             </div>
-        </nav>
+        </div>
+        
     </header>
     <div class="container" >
         <div class="wrapper">
-            <div class="filter">
+            <!--<h3>Nodes:</h3>-->
+            <!------------------------------- add new node ------------------------------->
+            <!--<div class="add wrapper-box">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-8">
+                    <div class="col-xs-12 col-sm-12">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label for="label">Label:</label>
+                                <input type="text" class="form-control" id="label" />
+                            </div>
+                            <div class="form-group">
+                                <label for="node-weight">Weight:</label>
+                                <input type="number" class="form-control" id="node-weight" value="1"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="icon">Icon:</label>
+                                <input type="text" class="form-control" id="icon" placeholder="etc:\uf0c0"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="color">Color:</label>
+                                <input type="color" class="form-control" id="color"/>
+                            </div>
+                            <button type="button" class="btn-add btn btn-primary">Add &nbsp;<i class="fa fa-plus"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>-->
+            <!------------------------------- nodes ------------------------------->
+            <!--<div class="nodes">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>label</th>
+                                    <th>weight</th>
+                                    <th>icon</th>
+                                    <th>color</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>-->
+            <!--<h3>Edges:</h3>-->
+            <!------------------------------- add new edge ------------------------------->
+            <!--<div class="add wrapper-box">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label for="from">From:</label>
+                                <select id="from"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="to">To:</label>
+                                <select id="to"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="edge-weight">Weight:</label>
+                                <input type="number" class="form-control" id="edge-weight" value="1" />
+                            </div>
+                            <button type="button" class="btn-add btn btn-primary">Add &nbsp;<i class="fa fa-plus"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>-->
+            <!------------------------------- edges ------------------------------->
+            <!--<div class="nodes">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>label</th>
+                                    <th>weight</th>
+                                    <th>icon</th>
+                                    <th>color</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>-->
+            <!------------------------------- filter result ------------------------------->
+            <div class="filter wrapper-box">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6">
                         <div class="form-group">
                             <label for="nodeMax">Nodes Weight:</label>
                             <input type="number" class="form-control range-input" id="nodeMin" value="0" />
                             <span>-</span>
                             <input type="number" class="form-control range-input" id="nodeMax" value="20" />
                         </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6">
                         <div class="form-group">
                             <label for="nodeMax">Edges Weight:</label>
                             <input type="number" class="form-control range-input" id="edgeMin" value="0" />
@@ -51,14 +153,14 @@
                             <input type="number" class="form-control range-input" id="edgeMax" value="20" />
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-3">
-
+                    <div class="col-xs-12 col-sm-12">
+                        <button class="btn btn-success" type="button" id="btn-filter"><strong>Go</strong></button>
                     </div>
                 </div>
             </div>
             
-            <div class="target">
-                <i class="fa fa-user"></i>
+            <div class="wrapper-box graph" id="graph">
+
             </div>
         </div>
     </div>
@@ -68,6 +170,13 @@
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/vis.js"></script>
+    <script src="js/data.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/font-spy.js"></script>
+    <!--<script>
+        var opt = { a: "aa" };
+        opt['b'] = 'bb';
+        console.log(opt);
+    </script>-->
 </body>
 </html>

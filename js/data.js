@@ -1,34 +1,7 @@
-﻿//--------------------- level 1 ---------------------------
-var col1 = {
-    nodes: [
-            {
-                id: 0,
-                label: "node 00",
-                weight: 3,
-                icon: "\uf192",
-                color: 'green',
-                parentCol: null,
-                subCol: null
-            },
-            {
-                id: 1,
-                label: "node 01",
-                weight: 3,
-                icon: "\uf192",
-                color: 'green',
-                parentCol: null,
-                subCol: null
-            }
-    ],
-    edges: [
-        { from: 0, to: 1, weight: 1, color: '#000000' },
-    ]
-};
-
-//اولین مجموعه ای که نمایش داده میشود
+﻿//اولین مجموعه ای که نمایش داده میشود
 var col0 = {
     //لطفا گره ها را مطابق الگو مشخص نمایید
-    nodes:[
+    nodes: [
         {
             id: 0,
             label: "node 0",
@@ -45,7 +18,7 @@ var col0 = {
             icon: "\uf192",
             color: 'blue',
             parentCol: null,
-            subCol: col1
+            subCol: 1//index of target collection in data array
         },
         {
             id: 2,
@@ -67,7 +40,7 @@ var col0 = {
         },
     ],
     //لطفا یال ها را مطابق الگو مشخص نمایید
-    edges:[
+    edges: [
         { from: 0, to: 1, weight: 1, color: '#000000' },
         { from: 0, to: 2, weight: 1.5, color: '#000000' },
         { from: 1, to: 2, weight: 1.1, color: '#000000' },
@@ -75,4 +48,34 @@ var col0 = {
         { from: 3, to: 1, weight: 1.4, color: '#000000' },
     ]
 };
+
+//--------------------- level 1 ---------------------------
+var col1 = {
+    nodes: [
+        {
+            id: 0,
+            label: "node 00",
+            weight: 3,
+            icon: "\uf192",
+            color: 'green',
+            parentCol: null,
+            subCol: null
+        },
+        {
+            id: 1,
+            label: "node 01",
+            weight: 3,
+            icon: "\uf192",
+            color: 'green',
+            parentCol: null,
+            subCol: null
+        }
+    ],
+    edges: [
+        { from: 0, to: 1, weight: 1, color: '#000000' },
+    ]
+};
+
+//
+var data = [col0, col1];
 

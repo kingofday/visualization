@@ -6,7 +6,7 @@ $(document).on('ready', function () {
         onLoad: function () { if (graph.network == null) graph.draw(); },
         onFail: 'fontFail anotherClass'
     });
-   
+
     //add new node
     $(document).on('click', '#btn-filter', function () {
         graph.draw();
@@ -147,13 +147,13 @@ $(document).on('ready', function () {
 //};
 //var network = new vis.Network(container, data, options);
 var graph = {
-    currentNode:col0,
-    draw:function(){
+    currentNode: data[0],
+    draw: function () {
         this.fire(this.convertData(this.filterData()));
     },
     filterData: function () {
-        let nodes = col0.nodes.filter(x=>x.weight >= $('#nodeMin').val() && x.weight <= $('#nodeMax').val());
-        let edges = col0.edges.filter(x=>x.weight >= $('#edgeMin').val() && x.weight <= $('#edgeMax').val() && nodes.find(y=>y.id==x.from) != null && nodes.find(y=>y.id==x.to) != null);
+        let nodes = this.currentNode.nodes.filter(x => x.weight >= $('#nodeMin').val() && x.weight <= $('#nodeMax').val());
+        let edges = this.currentNode.edges.filter(x => x.weight >= $('#edgeMin').val() && x.weight <= $('#edgeMax').val() && nodes.find(y => y.id == x.from) != null && nodes.find(y => y.id == x.to) != null);
         return {
             nodes: nodes,
             edges: edges
@@ -191,33 +191,33 @@ var graph = {
             };
             console.log(x);
         });
-        let edges = params.edges.map(x=>({
+        let edges = params.edges.map(x => ({
             from: x.from,
             to: x.to,
             value: x.weight,
-            color: { color: x.color, highlight:x.color },
+            color: { color: x.color, highlight: x.color },
             scaling: {
-                max:10
+                max: 10
             }
         }));
-        
+
         return {
-            data:{
+            data: {
                 nodes: params.nodes,
-                edges:edges,
+                edges: edges,
             },
-            options:options
+            options: options
         }
     },
-    network:null,
-    fire:function(params){
+    network: null,
+    fire: function (params) {
         var container = document.getElementById('graph');
         this.network = new vis.Network(container, params.data, params.options);
         this.network.fit();
         this.network.on("selectNode", function (params2) {
-            let node = params.data.nodes.find(x=>x.id == params2.nodes[0]);
-            this.currentNode = node.subNode;
-            this.draw();
+            let node = params.data.nodes.find(x => x.id == params2.nodes[0]);
+            graph.currentNode = data[node.subCol];
+            graph.draw();
         });
     }
 };

@@ -176,6 +176,7 @@ var graph = {
             edges: {
                 width: 2
             },
+			interaction:{hover:true},
             groups: {}
         };
         params.nodes.forEach(function (x) {
@@ -189,7 +190,6 @@ var graph = {
                     color: x.color
                 }
             };
-            console.log(x);
         });
         let edges = params.edges.map(x => ({
             from: x.from,
@@ -213,11 +213,25 @@ var graph = {
     fire: function (params) {
         var container = document.getElementById('graph');
         this.network = new vis.Network(container, params.data, params.options);
-        this.network.fit();
+        //this.network.fit();
+		 this.network.on('hoverNode', function (params2) {
+			 let node = params.data.nodes.find(x => x.id == params2.node);
+			 if(node.subCol!=null){
+				 graph.network.canvas.body.container.style.cursor = 'pointer';
+			 }
+		});
+		this.network.on('blurNode', function (params2) {
+			 let node = params.data.nodes.find(x => x.id == params2.node);
+			 if(node.subCol != null){
+				 graph.network.canvas.body.container.style.cursor = 'default';
+			 }
+		});
         this.network.on("selectNode", function (params2) {
             let node = params.data.nodes.find(x => x.id == params2.nodes[0]);
-            graph.currentNode = data[node.subCol];
-            graph.draw();
+			if(node.subCol!=null){
+				graph.currentNode = data[node.subCol];
+				graph.draw();
+			}
         });
     }
 };

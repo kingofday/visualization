@@ -7,25 +7,25 @@ $(document).on('ready', function () {
         onFail: 'fontFail anotherClass'
     });
 
-    //add new node
-    $(document).on('click', '#btn-filter', function () {
-        graph.draw();
-    });
-    //remove node
-    $(document).on('click', '.nodes .remove', function () {
-        let idx = $('.nodes tbody > tr').index($(this).closest('tr'));
-
+	
+	//remove node
+    $(document).on('click', '.node-nav > a', function () {
+		let $a = $(this);
+		graph.currentCol = data[parseInt($a.data('idx'))];
+		graph.draw();
+		$a.nextAll().remove();
+		
     });
 });
 
 var graph = {
-    currentNode: data[0],
+    currentCol: data[0],
     draw: function () {
         this.fire(this.convertData(this.filterData()));
     },
     filterData: function () {
-        let nodes = this.currentNode.nodes.filter(x => x.weight >= $('#nodeMin').val() && x.weight <= $('#nodeMax').val());
-        let edges = this.currentNode.edges.filter(x => x.weight >= $('#edgeMin').val() && x.weight <= $('#edgeMax').val() && nodes.find(y => y.id == x.from) != null && nodes.find(y => y.id == x.to) != null);
+        let nodes = this.currentCol.nodes.filter(x => x.weight >= $('#nodeMin').val() && x.weight <= $('#nodeMax').val());
+        let edges = this.currentCol.edges.filter(x => x.weight >= $('#edgeMin').val() && x.weight <= $('#edgeMax').val() && nodes.find(y => y.id == x.from) != null && nodes.find(y => y.id == x.to) != null);
         return {
             nodes: nodes,
             edges: edges
@@ -110,8 +110,9 @@ var graph = {
         this.network.on("selectNode", function (params2) {
             let node = params.data.nodes.find(x => x.id == params2.nodes[0]);
 			if(node.subCol!=null){
-				graph.currentNode = data[node.subCol];
+				graph.currentCol = data[node.subCol];
 				graph.draw();
+				$('.node-nav').append('<span>-</span> <a data-idx="'+node.subCol+'">'+node.label+'</a>')
 			}
         });
     }

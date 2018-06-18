@@ -7,7 +7,7 @@ $(document).on('ready', function () {
 		step: 0.5,
 		scale: [config.nodeRangeMin,5,config.nodeRangeMax],
 		format: '%s',
-		width: 300,
+		width: $('.nodes-slider-input').parent().width(),
 		showLabels: true,
 		isRange : true,
 		onstatechange:function(opt){
@@ -22,7 +22,7 @@ $(document).on('ready', function () {
 		step: 1,
 		scale: [0,5,10],
 		format: '%s',
-		width: 300,
+		width: $('.edges-slider-input').parent().width(),
 		showLabels: true,
 		isRange : true,
 		onstatechange:function(opt){
@@ -52,8 +52,8 @@ $(document).on('ready', function () {
 var graph = {
     currentColIdx: 0,
 	data:{
-		nodes:[],
-		edges:[]
+		nodes: new vis.DataSet(),
+		edges: new vis.DataSet()
 	},
 	options:{},
 	filter:{
@@ -77,8 +77,9 @@ var graph = {
 		let edges = data[this.currentColIdx].edges.filter(x => x.weight >= this.filter.edge.min && x.weight <= this.filter.edge.max && nodes.find(y => y.id == x.from) != null && nodes.find(y => y.id == x.to) != null);
 		if(this.network == null)
 		{
-			this.data.nodes = nodes;
-			this.data.edges = edges;
+			this.data.nodes.add(nodes);
+			this.data.edges.add(edges);
+			console.log(this.data.nodes);
 		}
 		else{
 			this.remove(...[
@@ -121,7 +122,9 @@ var graph = {
             x['group'] = 'fa_icon' + x.id;
 			if(x.labelColor)
 				x.font.color = x.labelColor;
-            graph.options.groups[x.group] = {
+			if(!graph.options.groups.hasOwnProperty(x.group))
+			{
+				graph.options.groups[x.group] = {
                 shape: 'icon',
                 icon: {
                     face: 'FontAwesome',
@@ -130,6 +133,8 @@ var graph = {
                     color: x.color
                 }
             };
+			}
+
         });
         this.data.edges = this.data.edges.map(x => ({
 			id:x.id,
@@ -168,11 +173,48 @@ var graph = {
 		});
         this.network.on("selectNode", function (params2) {
             let node = graph.data.nodes.find(x => x.id == params2.nodes[0]);
-			if(node.subCol!=null){
-				graph.currentColIdx = node.subCol;
-				graph.draw();
-				$('.node-nav').append('<span>-</span> <a data-idx="'+node.subCol+'">'+node.label+'</a>')
-			}
+			let edges = data[graph.currentColIdx].edges.filter(x=>(x.from == node.id || x.to == node.id) && graph.data.edges.find(y=>y.id == x.id) == null);
+			console.log(edges);
+			let nodes = data[graph.currentColIdx].nodes.filter(x=>edges.find(y=>y.from == x.id || y.to == x.id) !=null && graph.data.nodes.find(y=>y.id != x.id) == null);
+			nodes.forEach(x=>{
+				x.font.color = x.labelColor;
+				graph.data.nodes.add(x);
+				if(!graph.options.groups.hasOwnProperty(x.group))
+				{
+					graph.options.groups[x.group] = {
+					shape: 'icon',
+					icon: {
+						face: 'FontAwesome',
+						code: x.icon,
+						size: (x.weight * 10),
+						color: x.color
+						}
+					};
+				}
+
+			});
+			edges.map(x => ({
+				id:x.id,
+				from: x.from,
+				to: x.to,
+				value: x.weight,
+				color: { color: x.color, hover: config.edgesHoverColor, highlight: config.edgesHoverColor },
+				scaling: {
+					max: 9
+				},
+				label:x.label+"-"+x.weight,
+				font:{
+					face:"iransans",
+					size:config.edgeslabelFontSize
+				}
+			})).forEach(x=>{
+				graph.data.edges.add(x);
+			});
+			// if(node.subCol!=null){
+				// graph.currentColIdx = node.subCol;
+				// graph.draw();
+				// $('.node-nav').append('<span>-</span> <a data-idx="'+node.subCol+'">'+node.label+'</a>')
+			// }
         });
     }
 };

@@ -1,6 +1,37 @@
 ﻿///<reference path="jquery-1.10.2.min.js"/>
 
 $(document).on('ready', function () {
+	$('.nodes-slider-input').jRange({
+		from: config.nodeRangeMin,
+		to: config.nodeRangeMax,
+		step: 0.5,
+		scale: [config.nodeRangeMin,5,config.nodeRangeMax],
+		format: '%s',
+		width: 300,
+		showLabels: true,
+		isRange : true,
+		onstatechange:function(opt){
+			var maxMin = opt.split(',');
+			graph.filter.node.min = maxMin[0];
+			graph.filter.node.max = maxMin[1];
+		}
+	});
+	$('.edges-slider-input').jRange({
+		from: 0,
+		to: 10,
+		step: 1,
+		scale: [0,5,10],
+		format: '%s',
+		width: 300,
+		showLabels: true,
+		isRange : true,
+		onstatechange:function(opt){
+			var maxMin = opt.split(',');
+			graph.filter.edge.min = maxMin[0];
+			graph.filter.edge.max = maxMin[1];
+		}
+	});
+	
     graph.draw();
     $('#test-icon').fontSpy({
         onLoad: function () { if (graph.network == null) graph.draw(); },
@@ -9,30 +40,63 @@ $(document).on('ready', function () {
 
 	
 	//remove node
-    $(document).on('click', '.node-nav > a', function () {
-		let $a = $(this);
-		graph.currentCol = data[parseInt($a.data('idx'))];
-		graph.draw();
-		$a.nextAll().remove();
+    // $(document).on('click', '.node-nav > a', function () {
+		// let $a = $(this);
+		// graph.currentColIdx = data[parseInt($a.data('idx'))];
+		// graph.draw();
+		// $a.nextAll().remove();
 		
-    });
+    // });
 });
 
 var graph = {
-    currentCol: data[0],
+    currentColIdx: 0,
+	data:{
+		nodes:[],
+		edges:[]
+	},
+	options:{},
+	filter:{
+		node:{
+			min:0,
+			max:10,
+		},
+		edge:{
+			min:0,
+			max:10,
+		}
+	},
+	
     draw: function () {
-        this.fire(this.convertData(this.filterData()));
+		this.filterData();
+		this.convertData();
+        this.init();
     },
     filterData: function () {
-        let nodes = this.currentCol.nodes.filter(x => x.weight >= $('#nodeMin').val() && x.weight <= $('#nodeMax').val());
-        let edges = this.currentCol.edges.filter(x => x.weight >= $('#edgeMin').val() && x.weight <= $('#edgeMax').val() && nodes.find(y => y.id == x.from) != null && nodes.find(y => y.id == x.to) != null);
-        return {
-            nodes: nodes,
-            edges: edges
-        }
+		let nodes = data[this.currentColIdx].nodes.filter(x => x.weight >= this.filter.node.min && x.weight <= this.filter.node.max);
+		let edges = data[this.currentColIdx].edges.filter(x => x.weight >= this.filter.edge.min && x.weight <= this.filter.edge.max && nodes.find(y => y.id == x.from) != null && nodes.find(y => y.id == x.to) != null);
+		if(this.network == null)
+		{
+			this.data.nodes = nodes;
+			this.data.edges = edges;
+		}
+		else{
+			this.remove(...[
+				this.data.nodes.filter(x=>nodes.find(y=>y.id == x.id) == null),
+				this.data.edges.filter(x=>edges.find(y=>y.id == x.id) == null)
+			]);
+		}
     },
+	remove:function(nodes,edges){
+		edges.forEach(e=>{
+			this.data.remove({id:e.id});
+		});
+		nodes.forEach(n=>{
+			this.data.remove({id:n.id});
+		});
+	},
     convertData: function (params) {
-        let options = {
+        graph.options = {
             nodes: {
                 shapeProperties: {
                     interpolation: false
@@ -53,11 +117,11 @@ var graph = {
 			interaction:{hover:true},
             groups: {}
         };
-        params.nodes.forEach(function (x) {
+        this.data.nodes.forEach(function (x) {
             x['group'] = 'fa_icon' + x.id;
 			if(x.labelColor)
 				x.font.color = x.labelColor;
-            options.groups[x.group] = {
+            graph.options.groups[x.group] = {
                 shape: 'icon',
                 icon: {
                     face: 'FontAwesome',
@@ -67,7 +131,8 @@ var graph = {
                 }
             };
         });
-        let edges = params.edges.map(x => ({
+        this.data.edges = this.data.edges.map(x => ({
+			id:x.id,
             from: x.from,
             to: x.to,
             value: x.weight,
@@ -82,35 +147,29 @@ var graph = {
 			}
         }));
 
-        return {
-            data: {
-                nodes: params.nodes,
-                edges: edges,
-            },
-            options: options
-        }
     },
     network: null,
-    fire: function (params) {
+    init: function () {
+		console.log(this.data);
         var container = document.getElementById('graph');
-        this.network = new vis.Network(container, params.data, params.options);
+        this.network = new vis.Network(container, this.data, this.options);
         //this.network.fit();
 		 this.network.on('hoverNode', function (params2) {
-			 let node = params.data.nodes.find(x => x.id == params2.node);
+			 let node = graph.data.nodes.find(x => x.id == params2.node);
 			 if(node.subCol!=null){
 				 graph.network.canvas.body.container.style.cursor = 'pointer';
 			 }
 		});
 		this.network.on('blurNode', function (params2) {
-			 let node = params.data.nodes.find(x => x.id == params2.node);
+			 let node = graph.data.nodes.find(x => x.id == params2.node);
 			 if(node.subCol != null){
 				 graph.network.canvas.body.container.style.cursor = 'default';
 			 }
 		});
         this.network.on("selectNode", function (params2) {
-            let node = params.data.nodes.find(x => x.id == params2.nodes[0]);
+            let node = graph.data.nodes.find(x => x.id == params2.nodes[0]);
 			if(node.subCol!=null){
-				graph.currentCol = data[node.subCol];
+				graph.currentColIdx = node.subCol;
 				graph.draw();
 				$('.node-nav').append('<span>-</span> <a data-idx="'+node.subCol+'">'+node.label+'</a>')
 			}

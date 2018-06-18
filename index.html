@@ -8,6 +8,7 @@
     <link href="css/app.css" rel="stylesheet" />
     <link href="css/vis-network.min.css" rel="stylesheet" />
     <link href="css/font-awesome.css" rel="stylesheet" />
+	 <link href="css/jquery.range.css" rel="stylesheet" />
 </head>
 <body>
     <header class="container">
@@ -40,121 +41,20 @@
     </header>
     <div class="container" >
         <div class="wrapper">
-            <!--<h3>Nodes:</h3>-->
-            <!------------------------------- add new node ------------------------------->
-            <!--<div class="add wrapper-box">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12">
-                        <form class="form-inline">
-                            <div class="form-group">
-                                <label for="label">Label:</label>
-                                <input type="text" class="form-control" id="label" />
-                            </div>
-                            <div class="form-group">
-                                <label for="node-weight">Weight:</label>
-                                <input type="number" class="form-control" id="node-weight" value="1"/>
-                            </div>
-                            <div class="form-group">
-                                <label for="icon">Icon:</label>
-                                <input type="text" class="form-control" id="icon" placeholder="etc:\uf0c0"/>
-                            </div>
-                            <div class="form-group">
-                                <label for="color">Color:</label>
-                                <input type="color" class="form-control" id="color"/>
-                            </div>
-                            <button type="button" class="btn-add btn btn-primary">Add &nbsp;<i class="fa fa-plus"></i></button>
-                        </form>
-                    </div>
-                </div>
-            </div>-->
-            <!------------------------------- nodes ------------------------------->
-            <!--<div class="nodes">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>label</th>
-                                    <th>weight</th>
-                                    <th>icon</th>
-                                    <th>color</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
-                    </div>
-
-                </div>
-            </div>-->
-            <!--<h3>Edges:</h3>-->
-            <!------------------------------- add new edge ------------------------------->
-            <!--<div class="add wrapper-box">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12">
-                        <form class="form-inline">
-                            <div class="form-group">
-                                <label for="from">From:</label>
-                                <select id="from"></select>
-                            </div>
-                            <div class="form-group">
-                                <label for="to">To:</label>
-                                <select id="to"></select>
-                            </div>
-                            <div class="form-group">
-                                <label for="edge-weight">Weight:</label>
-                                <input type="number" class="form-control" id="edge-weight" value="1" />
-                            </div>
-                            <button type="button" class="btn-add btn btn-primary">Add &nbsp;<i class="fa fa-plus"></i></button>
-                        </form>
-                    </div>
-                </div>
-            </div>-->
-            <!------------------------------- edges ------------------------------->
-            <!--<div class="nodes">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>label</th>
-                                    <th>weight</th>
-                                    <th>icon</th>
-                                    <th>color</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-
-                </div>
-            </div>-->
             <!------------------------------- filter result ------------------------------->
             <div class="filter wrapper-box">
                 <div class="row">
                     <div class="col-xs-12 col-sm-6">
                         <div class="form-group">
-                            <label for="nodeMax">Nodes Weight:</label>
-                            <input type="number" class="form-control range-input" id="nodeMin" value="0" />
-                            <span>-</span>
-                            <input type="number" class="form-control range-input" id="nodeMax" value="20" />
+                            <label class="lbl" for="nodeMax">Nodes Weight:</label>
+							<input type="hidden" id="nodeRange" class="nodes-slider-input" value="5" />
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6">
                         <div class="form-group">
-                            <label for="nodeMax">Edges Weight:</label>
-                            <input type="number" class="form-control range-input" id="edgeMin" value="0" />
-                            <span>-</span>
-                            <input type="number" class="form-control range-input" id="edgeMax" value="20" />
+                            <label class="lbl" for="nodeMax">Edges Weight:</label>
+							<input type="hidden" id="edgeRange" class="edges-slider-input" value="5" />
                         </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-12">
-                        <button class="btn btn-success" type="button" id="btn-filter"><strong>Go</strong></button>
                     </div>
                 </div>
             </div>
@@ -172,10 +72,11 @@
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/vis.js"></script>
-    <script src="js/data.js"></script>
+    <script src="js/font-spy.js"></script>
+	<script src="js/jquery.range.js"></script>
+	<script src="js/data.js"></script>
 	<script src="js/config.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/font-spy.js"></script>
     <!--<script>
         var opt = { a: "aa" };
         opt['b'] = 'bb';

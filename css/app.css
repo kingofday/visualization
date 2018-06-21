@@ -51,3 +51,6 @@
 	position:relative;
 	max-width:200px;
 }
+.node-nav > a{
+	cursor:pointer;
+}

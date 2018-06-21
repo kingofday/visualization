@@ -46,9 +46,7 @@ $(document).on('ready', function () {
         onLoad: function () { 
 			if (graph.network == null) 
 			{
-				var fData = graph.filterData();
-				graph.appendData(fData.nodes,fData.edges);
-				graph.init();
+				graph.fire();
 			}			
 		},
         onFail: 'fontFail anotherClass'
@@ -56,16 +54,42 @@ $(document).on('ready', function () {
 
 	
 	//remove node
-    // $(document).on('click', '.node-nav > a', function () {
-		// let $a = $(this);
-		// graph.currentColIdx = data[parseInt($a.data('idx'))];
-		// graph.draw();
-		// $a.nextAll().remove();
+    $(document).on('click', '.node-nav > a', function () {
+		let $a = $(this);
+		graph.currentColIdx = $a.data('idx');
+		graph.fire();
+		$a.nextAll().remove();
 		
-    // });
+    });
 });
 
 var graph = {
+	fire:function(){
+		this.options.groups = {};
+		this.data.nodes = new vis.DataSet();
+		this.data.edges = new vis.DataSet();
+		data[this.currentColIdx].nodes.forEach(x=>{
+			x['group'] = String.fromCharCode(parseInt(x.icon,16))
+			x['group'] = 'fa_icon' + x.id;
+			if(x.labelColor)
+				x.font.color = x.labelColor;
+			if(!graph.options.groups.hasOwnProperty(x.group))
+			{
+				graph.options.groups[x.group] = {
+				shape: 'icon',
+				icon: {
+					face: 'FontAwesome',
+					code: x.icon,
+					size: (x.weight * 10),
+					color: x.color
+				}
+				}
+			}
+		});
+		var fData = graph.filterData();
+		graph.appendData(fData.nodes,fData.edges);
+		graph.init();
+	},
 	network: null,
     currentColIdx: 0,
 	data:{
@@ -104,9 +128,11 @@ var graph = {
 		}
 	},
     filterData: function () {
+		let nodes = data[this.currentColIdx].nodes.filter(x => x.weight >= this.filter.node.min && x.weight <= this.filter.node.max);
+		let edges = data[this.currentColIdx].edges.filter(x => x.weight >= this.filter.edge.min && x.weight <= this.filter.edge.max && nodes.find(y=>y.id == x.from) != null && nodes.find(y=>y.id == x.to) != null);
 		return {
-			nodes:data[this.currentColIdx].nodes.filter(x => x.weight >= this.filter.node.min && x.weight <= this.filter.node.max),
-			edges:data[this.currentColIdx].edges.filter(x => x.weight >= this.filter.edge.min && x.weight <= this.filter.edge.max)
+			nodes:nodes,
+			edges:edges
 		};
     },
 	add:function(){
@@ -136,24 +162,6 @@ var graph = {
 		});
 	},
     appendData: function (nodes,edges) {
-        nodes.forEach(function (x) {
-            x['group'] = 'fa_icon' + x.id;
-			if(x.labelColor)
-				x.font.color = x.labelColor;
-			if(!graph.options.groups.hasOwnProperty(x.group))
-			{
-				graph.options.groups[x.group] = {
-                shape: 'icon',
-                icon: {
-                    face: 'FontAwesome',
-                    code: x.icon,
-                    size: (x.weight * 10),
-                    color: x.color
-                }
-            };
-			}
-
-        });
         edges = edges.map(x => ({
 			id:x.id,
             from: x.from,
@@ -169,12 +177,10 @@ var graph = {
 				size:config.edgeslabelFontSize
 			}
         }));
-		console.log(nodes);
 		this.data.nodes.add(nodes);
 		this.data.edges.add(edges);
     },
     init: function () {
-		console.log(this.data);
         var container = document.getElementById('graph');
         this.network = new vis.Network(container, this.data, this.options);
         //this.network.fit();
@@ -190,13 +196,36 @@ var graph = {
 				 graph.network.canvas.body.container.style.cursor = 'default';
 			 }
 		});
-        this.network.on("selectNode", function (params2) {
-            let node = data[graph.currentColIdx].nodes.find(x => x.id == params2.nodes[0]);
-			let edges = data[graph.currentColIdx].edges.filter(x=>(x.from == node.id || x.to == node.id) && graph.data.edges.getIds().find(y=>y == x.id) == null);
-			console.log(edges);
-			let nodes = data[graph.currentColIdx].nodes.filter(x=>edges.find(y=>y.from == x.id || y.to == x.id) !=null && graph.data.nodes.getIds().find(y=>y != x.id) == null);
-			graph.appendData(nodes,edges);
-			
+		var selected = false,click = 0,node;
+		 this.network.on("selectNode",function(params2){
+			 selected = true;
+			 node = data[graph.currentColIdx].nodes.find(x => x.id == params2.nodes[0]);
+		 });
+        this.network.on("click", function (params2) {				
+		if(selected)
+		{
+			click++;
+			setTimeout(function(){
+				if(click == 1)
+				{
+					let edges = data[graph.currentColIdx].edges.filter(x=>(x.from == node.id || x.to == node.id) && graph.data.edges.getIds().find(y=>y == x.id) == null);
+					// console.log('edges after click');
+					// console.log(edges);
+					let nodes = data[graph.currentColIdx].nodes.filter(x=>edges.find(y=>y.from == x.id || y.to == x.id) !=null && graph.data.nodes.getIds().find(y=>y == x.id) == null);
+					graph.appendData(nodes,edges);
+					// console.log('nodes after click');
+					// console.log(nodes);
+				}
+				else if(click == 2){
+					graph.currentColIdx = node.subCol;
+					graph.fire();
+					$('.node-nav').append('<span>></span><a data-idx="'+node.subCol+'">'+node.label+'</a>')
+				}
+
+				click = 0;
+			},300);	
+		}
+
         });
     }
 };

@@ -6,5 +6,5 @@ var config = {
 	nodeRangeMin:0,
 	nodeRangeMax:10,
 	edgeRangeMin:0,
-	edgeRangeMax:0,
+	edgeRangeMax:10,
 };

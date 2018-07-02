@@ -1,5 +1,5 @@
 ﻿///<reference path="jquery-1.10.2.min.js"/>
-
+var changeLog1=0,changeLog2 = 0;
 $(document).on('ready', function () {
 	$('.nodes-slider-input').jRange({
 		from: config.nodeRangeMin,
@@ -14,12 +14,23 @@ $(document).on('ready', function () {
 			var maxMin = opt.split(',');
 			graph.filter.node.min = maxMin[0];
 			graph.filter.node.max = maxMin[1];
+			changeLog1++;
+			console.log('ok');
+			//disable another filter
+			if(changeLog1>2){
+				$('.edges-slider-input').jRange('setValue',config.edgeRangeMin.toString()+','+config.edgeRangeMax.toString());
+				console.log(config.edgeRangeMin.toString()+','+config.edgeRangeMax.toString());
+				graph.filter.edge.min = config.edgeRangeMin;
+				graph.filter.edge.max = config.edgeRangeMax;
+				console.log('whay');
+			}
+
 			if(graph.network!=null)
 			{
 				graph.remove();
 				graph.add();
 			}
-
+			f1FirstLoad=false;
 		}
 	});
 	$('.edges-slider-input').jRange({
@@ -35,11 +46,21 @@ $(document).on('ready', function () {
 			var maxMin = opt.split(',');
 			graph.filter.edge.min = maxMin[0];
 			graph.filter.edge.max = maxMin[1];
+			changeLog2++;
+			//disable another filter
+			 if(changeLog2>2)
+			 {
+				 $('.nodes-slider-input').jRange('setValue',config.nodeRangeMin.toString()+','+config.nodeRangeMax.toString());
+				 graph.filter.node.min = config.nodeRangeMin;
+				 graph.filter.node.max = config.nodeRangeMax;
+				
+			 }
 			if(graph.network!=null)
 			{
 				graph.remove();
 				graph.add();
 			}
+			f2FirstLoad=false;
 		}
 	});
     $('#test-icon').fontSpy({

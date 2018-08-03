@@ -1,14 +1,17 @@
 ﻿<!DOCTYPE html>
 
-<html lang="fa">
+
+<html itemscope itemtype="http://schema.org/QAPage" class="html__responsive" lang="fa">
+
+
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Graph</title>
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
     <link href="css/vis-network.min.css" rel="stylesheet" />
-    <link href="css/font-awesome.css" rel="stylesheet" />
-	 <link href="css/jquery.range.css" rel="stylesheet" />
+    <!--<link href="css/font-awesome.css" rel="stylesheet" />-->
+    <link href="css/jquery.range.css" rel="stylesheet" />
 </head>
 <body>
     <header class="container">
@@ -37,62 +40,54 @@
                 </nav>
             </div>
         </div>
-        
+
     </header>
-    <div class="container" >
+    <div class="container">
         <div class="wrapper">
-            <!------------------------------- filter result ------------------------------->
             <div class="filter wrapper-box">
                 <div class="row">
                     <div class="col-xs-12 col-sm-6">
                         <div class="row">
-							<div class="col-xs-12 col-sm-4">
-								<label class="lbl" for="nodeMax">Nodes Weight:</label>
-							</div>
-							<div class="col-xs-12 col-sm-8">
-								<div class="range-wrapper">
-									<input type="hidden" id="nodeRange" class="nodes-slider-input" value="5" />
-								</div>
-							</div>
+                            <div class="col-xs-12 col-sm-4">
+                                <label class="lbl" for="nodeMax">Nodes Weight:</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-8">
+                                <div class="range-wrapper">
+                                    <input type="hidden" id="nodeRange" class="nodes-slider-input" value="10" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6">
-					    <div class="row">
-							<div class="col-xs-12 col-sm-4">
-								<label class="lbl" for="nodeMax">Edges Weight:</label>
-							</div>
-							<div class="col-xs-12 col-sm-8">
-								<div class="range-wrapper">
-									<input type="hidden" id="edgeRange" class="edges-slider-input" value="5" />
-								</div>
-							</div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4">
+                                <label class="lbl" for="nodeMax">Edges Weight:</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-8">
+                                <div class="range-wrapper">
+                                    <input type="hidden" id="edgeRange" class="edges-slider-input" value="10" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="node-nav">
-				<a data-idx="0">level 0</a>
-			</div>
+                <a data-idx="0">level 0</a>
+            </div>
             <div class="wrapper-box graph" id="graph">
 
             </div>
         </div>
     </div>
-    <footer>
-
-    </footer>
+    <footer></footer>
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/vis.js"></script>
     <script src="js/font-spy.js"></script>
-	<script src="js/jquery.range.js"></script>
-	<script src="js/data.js"></script>
-	<script src="js/config.js"></script>
+    <script src="js/jquery.range.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/config.js"></script>
     <script src="js/app.js"></script>
-    <!--<script>
-        var opt = { a: "aa" };
-        opt['b'] = 'bb';
-        console.log(opt);
-    </script>-->
 </body>
 </html>
